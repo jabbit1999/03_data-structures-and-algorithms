@@ -1,12 +1,12 @@
 package com.beyond.section02.list;
 
 /*
-* 단일 연결 리스트(Single Linked List) 직접 구현하기
-* 각 노드는 데이터 + 다음 노드를 가리키는 포인터로 구성되어 있다.
-* */
+ * 단일 연결 리스트(Singly Linked List) 직접 구현하기
+ * 각 노드는 데이터 + 다음 노드를 가리키는 포인터 로 구성되어있다.
+ * */
 public class MyLinkedList<T> {
 
-  private Node<T> head; // 리스트의 첫번째 노드를 가리키는 포인터
+  private Node<T> head; // 리스트의 첫 번째 노드를 가리키는 포인터
 
   private Node<T> tail; // 리스트의 마지막 노드를 가리키는 포인터
 
@@ -14,17 +14,19 @@ public class MyLinkedList<T> {
 
 
   /* 정적 내부 클래스 - Node
-  * - 연결 리스트의 각 요소를 나타내는 역할의 클래스
-  * */
+   * - 연결 리스트의 각 요소를 나타내는 역할의 클래스
+   * */
   private static class Node<T>{
-    T data; // 노드가 저장할 실제 데이터
+    T data;       // 노드가 저장할 실제 데이터
     Node<T> next; // 다음 노드를 가리키는 포인터
 
+    // 생성자
     Node(T data){
       this.data = data;
       this.next = null; // 노드 처음 생성 시 다음 노드 미지정
     }
   }
+
 
   /* MyLinkedList 기본 생성자 */
   public MyLinkedList(){
@@ -39,17 +41,16 @@ public class MyLinkedList<T> {
    * @param element
    */
   public void add(T element){
-
     // 1. 새 Node 생성 + 노드에 데이터 저장
     Node<T> newNode = new Node<>(element);
 
     // 2. 리스트가 비어있는지 확인
-    if (head == null){
+    if(head == null){
       // 처음 추가된 노드는 head이자 tail
       head = newNode;
       tail = newNode;
-    }
-    else{
+
+    } else{
       // 3. 리스트 내 저장된 요소가 있다면
       tail.next = newNode;
       tail = newNode;
@@ -57,13 +58,13 @@ public class MyLinkedList<T> {
 
     // 4. 리스트에 저장된 요소 개수 size를 1 증가
     size++;
-
   }
 
   /**
    * 지정된 인덱스에 요소를 삽입
    * 삽입 위치가 리스트의 제일 끝이면 tail 포인터를 갱신
    * 시간 복잡도 : 최악의 경우 O(n)
+   *
    * @param index 삽입할 위치
    * @param element 삽입할 요소(data)
    * @throws IndexOutOfBoundsException 인덱스 범위가 유효 범위를 벗어 났을 때
@@ -71,8 +72,8 @@ public class MyLinkedList<T> {
   public void add(int index, T element){
 
     // 1. 인덱스가 유효 범위를 벗어나는 경우
-    if (index < 0 || index > size){
-      throw new IndexOutOfBoundsException("index가 범위를 벗어났습니다.");
+    if(index < 0 || index > size){
+      throw new IndexOutOfBoundsException("인덱스가 범위를 벗어났습니다.");
     }
 
     // 2. 새 Node 생성
@@ -81,36 +82,38 @@ public class MyLinkedList<T> {
     // 3. 새 Node를 지정된 위치에 삽입
 
     // 3-1. 삽입 위치가 맨 앞(head)인 경우
-    if(index == 0) {
+    if(index == 0){
       newNode.next = head; // 새 노드의 다음 요소를 현재 head로 지정
       head = newNode; // head 포인터가 새 노드를 가리키도록 지정
 
-      if (size == 0){ // 기존 저장된 요소가 없다면 head, tail 모두 newNode를 가리켜야함
+      if(size == 0){
+        // 기존 저장된 요소가 없다면 head, tail 모두 newNode를 가르켜야함
         tail = newNode;
       }
-
     }
 
     // 3-2. 삽입 위치가 맨 뒤(tail)인 경우
-    else if (index == size) {
+    else if(index == size){
       tail.next = newNode; // 현재 tail이 다음 새 Node가 되고
-      tail = newNode; // tail이 새 Node를 가리킴
-
+      tail = newNode;      // tail이 새 Node를 가리킴
     }
+
     // 3-3. 삽입 위치가 중간인 경우
-    else {
+    else{
       // 삽입할 이전 위치의 노드 찾기
 
       Node<T> current = head; // head부터 하나씩 접근
-      for (int i = 0; i < index - 1; i++) {
+      for(int i = 0 ; i < index - 1 ; i++){
         current = current.next; // index - 1 번째 노드가 최종 current
       }
-      newNode.next = current.next;
-      current.next = newNode;
+
+      newNode.next = current.next; // 새 노드의 다음이 current의 다음 대입
+      current.next = newNode; // current의 다음은 newNode가 되도록 대입
     }
 
     // 4. size 1 증가
     size++;
+
   }
 
 
@@ -128,6 +131,7 @@ public class MyLinkedList<T> {
     if (index < 0 || index >= size) {
       throw new IndexOutOfBoundsException("인덱스가 범위를 벗어났습니다.");
     }
+
     T removedElement; // 제거될 요소를 저장할 변수
 
     // 2. 제거 위치에 따라 처리
@@ -144,11 +148,13 @@ public class MyLinkedList<T> {
     else {
       // 제거할 노드의 이전 노드를 찾습니다.
       Node<T> current = head;
+
       for (int i = 0; i < index - 1; i++) {
         current = current.next; // index-1 위치의 노드까지 이동
       }
 
       removedElement = current.next.data; // 제거될 노드의 데이터를 저장
+
       current.next = current.next.next;   // current의 다음을, 제거될 노드의 다음으로 연결 (제거된 노드 스킵)
       if (current.next == null) { // 만약 제거된 노드가 마지막 노드였다면, current가 새로운 tail이 됨
         tail = current;
@@ -173,18 +179,26 @@ public class MyLinkedList<T> {
     if (index < 0 || index >= size) {
       throw new IndexOutOfBoundsException("인덱스가 범위를 벗어났습니다.");
     }
+
     // 2. head부터 시작하여 원하는 인덱스까지 노드를 순회
     Node<T> current = head;
     for (int i = 0; i < index; i++) {
       current = current.next;
     }
+
     // 3. 해당 노드의 데이터를 반환
     return current.data;
   }
 
+
+
+
+
+
+
   /**
    * head부터 tail까지 모든 Node를 차례대로 순회하면서
-   * StraightBuilder에 data를 추가한 후
+   * StringBuilder에 data를 추가한 후
    * 마지막에 String으로 반환하는 메서드
    * 시간 복잡도 : O(n)
    * @return
@@ -204,6 +218,4 @@ public class MyLinkedList<T> {
     sb.append("]");
     return sb.toString();
   }
-
-
 }
