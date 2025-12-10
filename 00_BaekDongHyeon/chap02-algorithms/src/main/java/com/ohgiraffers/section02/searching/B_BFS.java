@@ -94,9 +94,70 @@ public class B_BFS {
     }
     System.out.println();
 
+    // count 0으로 초기화
+    // (static의 공유 특징 때문에 테스트 마다 값이 누적되는걸 방지)
+    count = 0;
 
+    /* 배추밭 전체를 탐색하여 연결된 배추 묶음 찾기 */
+    for(int i = 0 ; i < M ; i++) {
+      for (int j = 0; j < N; j++) {
+        
+        /* 방문하지 않은 위치에 배추가 있다면 
+        * == 새로운 배추 묶음을 발견
+        * */
+        if(map[i][j] == 1 && !visit[i][j]){
+          count++; // 지렁이 한 마리 추가
 
-    return 0;
+          /* BFS 알고리즘을 통해서
+          * 현재 배추와 상,하,좌,우로 연결된 모든 배추를 찾아서
+          * 방문 처리 (visit[x][y] = true)
+          * */
+          bfs(i, j); // 묶음 찾기
+        }
+      }
+    }
+
+    return count;
   }
+
+  /**
+   * BFS(너비 우선 탐색) 알고리즘을 이용한 배추 묶음 탐색 메서드
+   * @param x   x 시작 좌표
+   * @param y   y 시작 좌표
+   */
+  private static void bfs(int x, int y){
+
+    // 1단계 : 시작 위치를 방문 처리하고, Queue에 추가
+    visit[x][y] = true;
+    q.offer(new Node(x, y));
+
+    // 2단계 :  Queue가 빌 때까지 반복(FIFO)
+    while(!q.isEmpty()){
+
+      // Queue에서 상하좌우 탐색을 수행할 배추 위치를 꺼냄.
+      Node node = q.poll();
+
+      // 3단계 : 현재 위치 기준 4방향 탐색
+      for (int i = 0; i < 4; i++) {
+        
+        // 다음 탐색할 위치를 계산
+        cx = node.x + dirX[i];
+        cy = node.y + dirY[i];
+        
+        // 4단계 : 계산한 위치가 유효한지 검사
+        // - 배추밭 범위를 넘지 않았는지 확인
+        // - 방문하지 않은 곳인지 확인
+        // - 배추가 있는지 확인
+        boolean condition1 = cx >= 0 && cy >= 0 && cx < M && cy < N;
+
+        if(condition1 && !visit[cx][cy] && map[cx][cy] == 1){ // 유효한 경우
+          q.offer(new Node(cx, cy));  // 큐에 추가 -> 탐색 후보로 등록
+          visit[cx][cy] = true;       // 방문 처리
+        }
+      }
+    }
+
+  }
+
 
 }
